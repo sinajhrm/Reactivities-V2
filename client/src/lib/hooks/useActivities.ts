@@ -19,8 +19,8 @@ export const useActivities = (id?: string) => {
   const { data: activity, isLoading: isLoadingActivity } = useQuery({
     queryKey: ["activities", id],
     queryFn: async () => {
-      const resposne = await agent.get<Activity>(`/activities/${id}`);
-      return resposne.data;
+      const response = await agent.get<Activity>(`/activities/${id}`);
+      return response.data;
     },
     enabled: !!id,
   });
