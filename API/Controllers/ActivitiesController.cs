@@ -32,7 +32,7 @@ public class ActivitiesController() : BaseAPIController
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "IsActivityHost")]
+    // [Authorize(Policy = "IsActivityHost")]
     public async Task<ActionResult<Activity>> EditActivity(string id, EditActivityDto activity)
     {
         activity.Id = id;

@@ -13,11 +13,11 @@ export default function NotFound() {
         p: 6,
       }}
     >
-      <SearchOff color="primary" sx={{fontSize: 100 }} />
+      <SearchOff color="primary" sx={{ fontSize: 100 }} />
       <Typography gutterBottom variant="h3">
         Opps — We could not find what you are looking for!
       </Typography>
-      <Button fullWidth LinkComponent={Link} href='/activities'>
+      <Button fullWidth LinkComponent={Link} href="/activities">
         Return to the activities page ...
       </Button>
     </Paper>

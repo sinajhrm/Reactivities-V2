@@ -46,17 +46,13 @@ export default function UserMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem
-          onClick={handleClose}
-          LinkComponent={Link}
-          href="/createActivity"
-        >
+        <MenuItem onClick={handleClose} component={Link} to={"/createActivity"}>
           <ListItemIcon>
             <Add />
           </ListItemIcon>
           <ListItemText>Create Activity</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleClose} LinkComponent={Link} href="/profile">
+        <MenuItem onClick={handleClose} component={Link} to={"/profile"}>
           <ListItemIcon>
             <Person />
           </ListItemIcon>
