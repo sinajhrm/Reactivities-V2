@@ -17,16 +17,16 @@ public class GetProfile
         public required string UserId { get; set; }
     }
 
-    public class Handler(AppDbContext context, IMapper mapper) : IRequestHandler<Query, Result<UserProfile>>
+    public class Handler(AppDbContext context, IMapper mapper, IUserAccessor userAccessor) : IRequestHandler<Query, Result<UserProfile>>
     {
         public async Task<Result<UserProfile>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var profile = await context.Users.ProjectTo<UserProfile>(mapper.ConfigurationProvider)
+            var profile = await context.Users.ProjectTo<UserProfile>(mapper.ConfigurationProvider, new { currentUserId = userAccessor.GetUserId() })
             .SingleOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
             return profile == null ?
-             Result<UserProfile>.Failure("Profile was not found!", 404) :
-              Result<UserProfile>.Success(profile);
+                Result<UserProfile>.Failure("Profile was not found!", 404) :
+                Result<UserProfile>.Success(profile);
         }
     }
 }
