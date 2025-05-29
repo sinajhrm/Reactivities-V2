@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import {
   activitySchema,
@@ -39,7 +39,7 @@ export default function ActivityForm() {
       });
   }, [activity, reset]);
 
-  const onSubmit = (data: ActivitySchema) => {
+  const onSubmit = (data: FieldValues) => {
     const { location, ...rest } = data;
     const flattenedData = { ...rest, ...location };
     try {
@@ -49,7 +49,7 @@ export default function ActivityForm() {
           { onSuccess: () => navigate(`/activities/${activity.id}`) }
         );
       } else {
-        createActivity.mutate(flattenedData as Activity, {
+        createActivity.mutate(flattenedData, {
           onSuccess: (id) => navigate(`/activities/${id}`),
         });
       }
@@ -96,7 +96,14 @@ export default function ActivityForm() {
           name="location"
         />
         <Box display="flex" justifyContent="end" gap={3}>
-          <Button color="inherit">Cancel</Button>
+          <Button
+            color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
+          </Button>
           <Button
             color="success"
             variant="contained"

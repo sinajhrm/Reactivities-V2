@@ -4,7 +4,6 @@ using Application.Interfaces;
 using Domain;
 using MediatR;
 using Persistence;
-using SQLitePCL;
 
 namespace Application.Profiles.Commands;
 
