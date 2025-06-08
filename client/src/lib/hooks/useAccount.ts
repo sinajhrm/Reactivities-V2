@@ -29,13 +29,35 @@ export const useAccount = () => {
     },
   });
 
+  const verifyEmail = useMutation({
+    mutationFn: async ({ userId, code }: { userId: string; code: string }) => {
+      await agent.get(`/confirmEmail?userId=${userId}&code=${code}`);
+    },
+  });
+
+  const resendConfirmationEmail = useMutation({
+    mutationFn: async ({
+      email,
+      userId,
+    }: {
+      email?: string;
+      userId?: string | null;
+    }) => {
+      agent.get(`/account/resendConfirmEmail`, {
+        params: {
+          email,
+          userId,
+        },
+      });
+    },
+    onSuccess: () => {
+      toast.success("Email sent! Please check your email.");
+    },
+  });
+
   const registerUser = useMutation({
     mutationFn: async (creds: RegisterSchema) => {
       await agent.post("/account/register", creds);
-    },
-    onSuccess: () => {
-      toast.success("Registration Successful — You can now login!!!");
-      navigate("/login");
     },
   });
 
@@ -48,5 +70,13 @@ export const useAccount = () => {
     enabled: !queryClient.getQueryData(["user"]),
   });
 
-  return { loginUser, registerUser, currentUser, logoutUser, loadingUserInfo };
+  return {
+    loginUser,
+    registerUser,
+    currentUser,
+    logoutUser,
+    loadingUserInfo,
+    verifyEmail,
+    resendConfirmationEmail,
+  };
 };
