@@ -9,6 +9,8 @@ import {
   registerSchema,
   RegisterSchema,
 } from "../../lib/schemas/registerSchema";
+import { useState } from "react";
+import RegisterSuccess from "./RegisterSuccess";
 
 export default function RegisterForm() {
   const { registerUser } = useAccount();
@@ -16,11 +18,15 @@ export default function RegisterForm() {
     control,
     handleSubmit,
     setError,
+    watch,
     formState: { isValid, isSubmitting },
   } = useForm<RegisterSchema>({
     mode: "onTouched",
     resolver: zodResolver(registerSchema),
   });
+  const email = watch("email");
+
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const onSubmit = async (data: RegisterSchema) => {
     await registerUser.mutateAsync(data, {
@@ -36,55 +42,66 @@ export default function RegisterForm() {
           });
         }
       },
+      onSuccess: () => setRegisterSuccess(true),
     });
   };
 
   return (
-    <Paper
-      component={"form"}
-      onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        p: 3,
-        gap: 3,
-        maxWidth: "md",
-        mx: "auto",
-      }}
-    >
-      <Box
-        display={"flex"}
-        alignContent={"center"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={3}
-        color={"secondary.main"}
-      >
-        <LockOpen fontSize="large" />
-        <Typography variant="h4">Register</Typography>
-      </Box>
-      <TextInput label="email" control={control} name="email" />
-      <TextInput label="Display Name" control={control} name="displayName" />
-      <TextInput
-        label="password"
-        type="password"
-        control={control}
-        name="password"
-      />
-      <Button
-        type="submit"
-        disabled={!isValid || isSubmitting}
-        variant="contained"
-        size="large"
-      >
-        Register
-      </Button>
-      <Typography sx={{ textAlign: "center" }}>
-        Already have an account?!
-        <Typography component={Link} ml={1} to={"/login"} color="primary">
-          Sign in
-        </Typography>
-      </Typography>
-    </Paper>
+    <>
+      {registerSuccess ? (
+        <RegisterSuccess email={email} />
+      ) : (
+        <Paper
+          component={"form"}
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            p: 3,
+            gap: 3,
+            maxWidth: "md",
+            mx: "auto",
+          }}
+        >
+          <Box
+            display={"flex"}
+            alignContent={"center"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={3}
+            color={"secondary.main"}
+          >
+            <LockOpen fontSize="large" />
+            <Typography variant="h4">Register</Typography>
+          </Box>
+          <TextInput label="email" control={control} name="email" />
+          <TextInput
+            label="Display Name"
+            control={control}
+            name="displayName"
+          />
+          <TextInput
+            label="password"
+            type="password"
+            control={control}
+            name="password"
+          />
+          <Button
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            variant="contained"
+            size="large"
+          >
+            Register
+          </Button>
+          <Typography sx={{ textAlign: "center" }}>
+            Already have an account?!
+            <Typography component={Link} ml={1} to={"/login"} color="primary">
+              Sign in
+            </Typography>
+          </Typography>
+        </Paper>
+      )}
+    </>
   );
 }

@@ -45,7 +45,8 @@ agent.interceptors.response.use(
         }
         break;
       case 401:
-        toast.error("Unauthorised ...");
+        if (data.detail === "NotAllowed") throw new Error(data.detail);
+        else toast.error("Unauthorised ...");
         break;
       case 404:
         toast.error("Not Found...");
