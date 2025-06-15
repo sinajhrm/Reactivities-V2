@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using API.DTOs;
 using Domain;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -96,5 +97,20 @@ public class AccountController(SignInManager<User> signInManager,
 
 
         return NoContent();
+    }
+
+    [HttpPost("changePassword")]
+    public async Task<ActionResult> ChangePassword(ChangePasswordDto passwordDto)
+    {
+        var user = await signInManager.UserManager.GetUserAsync(User);
+
+        if (user == null) return Unauthorized();
+
+        var result = await signInManager.UserManager.ChangePasswordAsync(user, passwordDto.CurrentPassword, passwordDto.NewPassword);
+
+        if (result.Succeeded) return Ok();
+
+        return BadRequest(result.Errors.First().Description);
+
     }
 }
